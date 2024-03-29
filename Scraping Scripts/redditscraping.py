@@ -13,8 +13,8 @@ def scrape_reddit(subreddit_names, keywords, limit = 100):
         )
 
         data = []
-        condition = False
-        start_time = time.time()
+        # condition = False
+        # start_time = time.time()
         for subreddit_name in subreddit_names:
             # Choose subreddit
             subreddit = reddit.subreddit(subreddit_name)
@@ -46,13 +46,13 @@ def scrape_reddit(subreddit_names, keywords, limit = 100):
                     # Introduce a delay between API calls
                     time.sleep(1)
 
-                    if time.time() - start_time >= 90:
-                        condition = True
-                        break
-                if condition:
-                    break
-            if condition:
-                break
+            #         if time.time() - start_time >= 90:
+            #             condition = True
+            #             break
+            #     if condition:
+            #         break
+            # if condition:
+            #     break
 
         # Convert to pandas
         df = pd.DataFrame(data)
