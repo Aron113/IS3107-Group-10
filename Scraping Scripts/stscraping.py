@@ -55,7 +55,7 @@ def scrape_st():
                         soup_text.append(text)
                     except:
                         pass
-                    if time.time() - start_time >= 3600:
+                    if time.time() - start_time >= 7200:
                         condition = True
                         break
                 df = pd.concat([df, pd.DataFrame(
