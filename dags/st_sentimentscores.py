@@ -35,10 +35,10 @@ def project():
     
     @task
     def perform_st_sentiment_analysis():
-        query = """
+        query = f"""
             SELECT url, title, text
             FROM `is3107-group-10.Test_dataset_1.Straitstimes Data`
-            WHERE text REGEXP '{'|'.join(keywords)}'
+            WHERE REGEXP_CONTAINS(text, r'({"|".join(keywords)})')
         """
 
         results = client.query(query).to_dataframe()
