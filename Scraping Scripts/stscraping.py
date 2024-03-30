@@ -26,8 +26,8 @@ def scrape_st():
     start_time = time.time()
     condition =False
     if not(os.path.isfile(full_raw_name)):
-        for i in tqdm(range(total_sitemap_pages)):
-            soup_text = BeautifulSoup(urlopen(f"{target_site}sitemap.xml?page={str(i+1)}"), 'lxml').get_text()
+        for i in tqdm(range(total_sitemap_pages, 0, -1)):
+            soup_text = BeautifulSoup(urlopen(f"{target_site}sitemap.xml?page={str(i)}"), 'lxml').get_text()
             soup_url = [x for x in soup_text.split("\n") if "https://www.straitstimes.com/singapore/" in x and len(x) >= len(target_site)+1] # list of urls
             
             if save_url_only:
@@ -55,7 +55,7 @@ def scrape_st():
                         soup_text.append(text)
                     except:
                         pass
-                    if time.time() - start_time >= 60:
+                    if time.time() - start_time >= 7200:
                         condition = True
                         break
                 df = pd.concat([df, pd.DataFrame(
@@ -71,4 +71,3 @@ def scrape_st():
 
     else:
         print("Already got the data, proceeding with it..")
-
