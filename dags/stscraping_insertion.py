@@ -36,7 +36,7 @@ def project():
     @task
     def data_insertion(df):
         dataset_id = 'Dataset'
-        table_id = 'Test table 3'
+        table_id = 'Straitstimes Data'
         
         data = df
 
