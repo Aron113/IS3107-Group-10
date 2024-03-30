@@ -38,7 +38,7 @@ def project():
         query = f"""
             SELECT subreddit, title, text, id, comments.body AS comments_body
             FROM `is3107-group-10.Test_dataset_1.Reddit Data`
-            WHERE comments.body REGEXP '{'|'.join(keywords)}'
+            WHERE REGEXP_CONTAINS(comments.body, r'({"|".join(keywords)})')
         """
 
         results = client.query(query).to_dataframe()
