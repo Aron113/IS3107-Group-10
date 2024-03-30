@@ -34,7 +34,7 @@ def project():
         return df
     
     @task
-    def data_insertion():
+    def data_insertion(df):
         dataset_id = 'Test_dataset_1'
         table_id = 'Test table 3'
         
