@@ -25,7 +25,6 @@ client = bigquery.Client(credentials=credentials)
 @dag(dag_id='reddit_sentimentscores', default_args=default_args, schedule=None, catchup=False, tags=['IS3107_Project'])
 def project():
     
-    @task
     def preprocess_text(text):
         # Preprocess the text by removing special characters and converting to lowercase
         text = text.replace('\n', ' ').replace('\r', '')
@@ -36,9 +35,10 @@ def project():
     @task
     def perform_reddit_sentiment_analysis():
         query = f"""
-            SELECT subreddit, title, text, id, comments.body AS comments_body
-            FROM `is3107-group-10.Test_dataset_1.Reddit Data`
-            WHERE REGEXP_CONTAINS(comments.body, r'({"|".join(keywords)})')
+            SELECT subreddit, title, text, id, comment_record.body AS comments_body
+            FROM `is3107-group-10.Dataset.Reddit Data`,
+            UNNEST(comments) AS comment_record
+            WHERE REGEXP_CONTAINS(comment_record.body, r'({"|".join(keywords)})')
         """
 
         results = client.query(query).to_dataframe()
@@ -68,7 +68,7 @@ def project():
     def insert_sentiment_scores(results):
         if results is not None:
             # Insert the sentiment scores into the BigQuery table
-            table_id = 'is3107-group-10.Test_dataset_1.Reddit Data with sentiment scores'
+            table_id = 'is3107-group-10.Dataset.Reddit Data with sentiment scores'
             job_config = bigquery.LoadJobConfig(write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
             client.load_table_from_dataframe(results, table_id, job_config=job_config).result()
             print("Sentiment scores inserted into BigQuery table")
