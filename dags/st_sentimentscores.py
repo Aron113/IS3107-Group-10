@@ -25,7 +25,6 @@ client = bigquery.Client(credentials=credentials)
 @dag(dag_id='st_sentimentscores', default_args=default_args, schedule=None, catchup=False, tags=['IS3107_Project'])
 def project():
     
-    @task
     def preprocess_text(text):
         # Preprocess the text by removing special characters and converting to lowercase
         text = text.replace('\n', ' ').replace('\r', '')
@@ -37,7 +36,7 @@ def project():
     def perform_st_sentiment_analysis():
         query = f"""
             SELECT url, title, text
-            FROM `is3107-group-10.Test_dataset_1.Straitstimes Data`
+            FROM `is3107-group-10.Dataset.Straitstimes Data`
             WHERE REGEXP_CONTAINS(text, r'({"|".join(keywords)})')
         """
 
@@ -65,7 +64,7 @@ def project():
     def insert_sentiment_scores(results):
         if results is not None:
             # Insert the sentiment scores into the BigQuery table
-            table_id = 'is3107-group-10.Test_dataset_1.Straitstimes Data with sentiment scores'
+            table_id = 'is3107-group-10.Dataset.Straitstimes Data with sentiment scores'
             job_config = bigquery.LoadJobConfig(write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
             client.load_table_from_dataframe(results, table_id, job_config=job_config).result()
             print("Sentiment scores inserted into BigQuery table")
