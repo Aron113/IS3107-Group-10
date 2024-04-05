@@ -580,4 +580,3 @@ def render_graphs(bar_graph_tab, boxplot_tab, density_plot_tab):
 
 if __name__ == '__main__':
     app.run_server(debug=False, port=8002)
-Copyright © 2011-2024 PythonAnywhere LLP — Terms — Privacy & Cookies
