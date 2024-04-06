@@ -1,4 +1,3 @@
-
 from dash import Dash, html, dcc, Input, Output  # pip install dash
 #import dash_ag_grid as dag                       # pip install dash-ag-grid
 import dash_bootstrap_components as dbc          # pip install dash-bootstrap-components
@@ -18,11 +17,10 @@ import os
 from google.cloud import bigquery                # pip install --upgrade google-cloud-bigquery
 from google.oauth2 import service_account
 
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "IS3107 Keys.json"
-# client = bigquery.Client()
-cwd = os.getcwd()
-print(cwd)
-credentials = service_account.Credentials.from_service_account_file('/home/is3107group10/dashboard/IS3107 Keys.json')
+
+keys_file_path = os.path.join(os.path.dirname(__file__), "IS3107 Keys.json")
+singapore_shape_path = os.path.join(os.path.dirname(__file__), "singapore_shape5.png")
+credentials = service_account.Credentials.from_service_account_file(keys_file_path)
 client = bigquery.Client(credentials=credentials)
 import db_dtypes                                 # pip install db-dtypes
 
@@ -359,7 +357,7 @@ def wordcloud_as_html(type):
 		wc_str = ''.join(query_results["reddit_wordcloud_result"]["comments_body"])
 	elif type == "News":
 		wc_str = ''.join(pd.concat([query_results["news_wordcloud_result"]["title"], [query_results["news_wordcloud_result"]["text"]]]))
-	wc_mask = np.array(PIL.Image.open("./singapore_shape5.png"))
+	wc_mask = np.array(PIL.Image.open(singapore_shape_path))
 	stopwords = set(list(STOPWORDS) + ["dont", "one", "take", "say", "thing", "make", "will", "didnt", "even", "might", "per", "singapore", "said", "people"])
 	wc = WordCloud(stopwords=stopwords,
 				   mask=wc_mask,
@@ -578,5 +576,6 @@ def render_graphs(bar_graph_tab, boxplot_tab, density_plot_tab):
 # 		return density_plot_as_html("News")
 
 
-if __name__ == '__main__':
-    app.run_server(debug=False, port=8002)
+# if __name__ == '__main__':
+#     app.run_server(debug=False, port=8002)
+server = app.server
