@@ -23,7 +23,7 @@ default_args = {
 credentials = service_account.Credentials.from_service_account_file('IS3107 Keys.json')
 client = bigquery.Client(credentials=credentials)
             
-@dag(dag_id='stscraping_insertion', default_args=default_args, schedule=None, catchup=False, tags=['IS3107_Project'])
+@dag(dag_id='stscraping_insertion', default_args=default_args, schedule_interval='@daily', catchup=False, tags=['IS3107_Project'])
 def project():
 
     @task
